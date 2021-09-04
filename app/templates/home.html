@@ -1,0 +1,17 @@
+<html>
+  <body>
+    {% if learner %}<p> {{ learner.name }} </p>
+
+    {% else %}
+
+    <form action="/" method="post" name="nameform">
+      {{ form.hidden_tag() }}
+      {{ form.name(rows="10", placeholder="What's your name?")|safe }}
+      <input type="submit" value="Let's get started" class="button"/>
+    </form>
+
+
+    {% endif %}
+
+  </body>
+</html>
