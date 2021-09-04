@@ -1,0 +1,10 @@
+<html>
+  <body>
+    {% if learner %}<p> Hey {{ learner.name }} </p>{% endif %}
+    {% if combination %}
+      <p>Question: {{ question }}</p>
+      <p>Answer: {{ right_answer }}</p>
+    {% endif %}
+
+  </body>
+</html>
