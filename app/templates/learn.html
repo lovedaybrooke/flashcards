@@ -2,8 +2,21 @@
   <body>
     {% if learner %}<p> Hey {{ learner.name }} </p>{% endif %}
     {% if combination %}
-      <p>Question: {{ question }}</p>
-      <p>Answer: {{ right_answer }}</p>
+      <h1>Question: {{ question }}</h1>
+      <h1>Possible answers:</h1> 
+        {% for answer in answers %}
+          <p id="{{ answer.correct }}" class="answer-button">
+            {{ answer.text }}
+          </p>
+          <form action="/learn/{{ learner_id }}" method="post" name="answerform" id="{{answer.correct}}">
+              {{ form.combination_id(value=combination) }}
+              {{ form.question_type(value=question_type) }}
+              {{ form.result(value=answer.correct) }}
+              <input type="submit" value="Next question" class="button"/>
+          </form>
+        {% endfor %}
+
+        
     {% endif %}
 
   </body>

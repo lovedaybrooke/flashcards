@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template, redirect, request
 
 from app import app, db
-from app.forms import NameForm
+from app.forms import *
 from app.models import *
 
 
@@ -18,11 +18,15 @@ def home():
 
 @app.route('/learn/<learner_id>', methods=['GET', 'POST'])
 def learn(learner_id):
-    if request.method == "GET":
-        next_question = LearningHistory.get_question(learner_id)
-        return render_template('learn.html', 
-                               combination=next_question["combination_id"],
-                               right_answer=next_question["right_answer"],
-                               question=next_question["question"],
-                               question_type=next_question["question_type"]
-                               )
+    form = AnswerForm()
+    if request.method == "POST":
+        LearningHistory.update(learner_id, form.combination_id.data,
+                               form.question_type.data, form.result.data)
+    next_question = LearningHistory.get_question(learner_id)
+    return render_template('learn.html',
+                           learner_id=learner_id,
+                           combination=int(next_question["combination_id"]),
+                           answers=next_question["answers"],
+                           question=next_question["question"],
+                           question_type=next_question["question_type"],
+                           form=form)
