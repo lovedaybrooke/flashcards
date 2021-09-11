@@ -1,17 +1,22 @@
-<html>
-  <body>
+{% extends "basiclayout.html" %}
+
+  {% block maincontent %}
     {% if learner %}<p> {{ learner.name }} </p>
 
     {% else %}
-
-    <form action="/" method="post" name="nameform">
-      {{ form.hidden_tag() }}
-      {{ form.name(rows="10", placeholder="What's your name?")|safe }}
-      <input type="submit" value="Let's get started" class="button"/>
-    </form>
+    <main class="grid-container">
+      <div class="grid-100" id="nameform">
+      <form action="/" method="post" name="nameform">
+        {{ form.hidden_tag() }}
+        {{ form.name(rows="1", placeholder="What's your name?")|safe }}
+        <div class="slanted-button visible">
+          <input type="submit" value="Let's get started" class="button"/>
+        </div>
+      </form>
+      </div>
+    </main>
 
 
     {% endif %}
 
-  </body>
-</html>
+  {% endblock %}

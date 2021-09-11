@@ -1,23 +1,44 @@
-<html>
-  <body>
+{% extends "basiclayout.html" %}
+
+  {% block maincontent %}
     {% if learner %}<p> Hey {{ learner.name }} </p>{% endif %}
-    {% if combination %}
-      <h1>Question: {{ question }}</h1>
-      <h1>Possible answers:</h1> 
-        {% for answer in answers %}
-          <p id="{{ answer.correct }}" class="answer-button">
-            {{ answer.text }}
-          </p>
-          <form action="/learn/{{ learner_id }}" method="post" name="answerform" id="{{answer.correct}}">
-              {{ form.combination_id(value=combination) }}
-              {{ form.question_type(value=question_type) }}
-              {{ form.result(value=answer.correct) }}
-              <input type="submit" value="Next question" class="button"/>
-          </form>
-        {% endfor %}
+    <main class="grid-container">
+      <div class="grid-100">
+       {% if combination %}
+        <div class="question-card">
+            <div class="card-content">
+              <p class="question">{{ question.question }}</p>
+              {% if question.hint %}
+                <p class="hint">{{ question.hint }}</p>
+              {% endif %}
+            </div>
+        </div>
+      </div>
+      <div class="grid-100">
+          {% for answer in answers %}
+            <div class="grid-50">
+              <div id="{{ answer.correct }}" class="answer-card">
+                {{ answer.text }}
+              </div>
+            </div>
+          {% endfor %}
 
-        
-    {% endif %}
+          {% for answer in answers %}
+          <div class="grid-100">
+              <div class="slanted-button">
+                <form action="/learn/{{ learner_id }}" method="post" name="answerform" id="{{answer.correct}}">
+                    {{ form.combination_id(value=combination) }}
+                    {{ form.question_type(value=question_type) }}
+                    {{ form.result(value=answer.correct) }}
+                    <input type="submit" value="Next question" class="button"/>
+                </form>
+              </div>
+            </div>
+          {% endfor %} 
 
-  </body>
-</html>
+        {% endif %}
+      </div>
+    </main>
+
+
+  {% endblock %}

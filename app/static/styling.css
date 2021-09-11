@@ -1,0 +1,98 @@
+body {
+	background-image: url("/static/background.png");
+  	background-repeat: repeat;
+  	font-family: 'Urbanist', sans-serif;
+  	letter-spacing: 0.5px;
+  	font-size: 32px;
+  	text-align: center;
+}
+
+div.question-card {
+	display: flex;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+	margin:  30px auto ;
+	padding:  20px 20px;
+	width:  400px;
+	height:  120px;
+	background-color:  white;
+	text-align: center;
+	box-shadow: 10px 10px #B2B8DC;
+}
+
+div.card-content {
+	display:  block;
+}
+
+div.question-card p {
+	margin: 0.4em;
+	font-size: 1.2em;
+}
+
+div.question-card p.hint {
+	font-size: 0.7em;
+}
+
+div.answer-card {
+	display: flex;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+	margin:  30px 60px;
+	padding:  30px 20px;
+	background-color:  white;
+	text-align: center;
+	box-shadow: 8px 8px #D7E8F4;
+}
+
+.answerform div.slanted_button, div.slanted-button input {
+	display:  none;
+}
+
+div.slanted-button.visible {
+	margin:  30px auto ;
+	width: 170px;
+	background-color:  white;
+	text-align: center;
+	border: 6px #D9DDE0 solid;
+	transform: skew(-20deg);
+}
+
+div.slanted-button.visible:hover, div.answer-card:hover {
+	background-color:  #F4F4F4;
+}
+
+div.slanted-button.visible input {
+	display:  block;
+	background:  none;
+	border:  none;
+	transform: skew(20deg);
+	font-family: 'Urbanist', sans-serif;
+	font-size: 0.7em;
+	margin:  15px auto ;
+
+}
+
+
+div#nameform input#name {
+	margin:  30px auto 0px;
+	width: 250px;
+	height:  50px;
+	transform: translate(10px);
+
+}
+
+div#nameform input#name::placeholder {
+	font-family: 'Urbanist', sans-serif;
+	font-size: 1.2em;
+	text-align:  center;
+}
+
+
+#nameform div.slanted-button.visible {
+	width:  210px;
+}
+
+form {
+	margin: 0;
+}
+

@@ -39,14 +39,17 @@ class Combination(db.Model):
         prefix = VerbPrefix.query.filter_by(id=self.prefix_id).first()
         stem = VerbStem.query.filter_by(id=self.stem_id).first()
         meaning = VerbMeaning.query.filter_by(
-                            id=self.meaning_id).first().append_hint()
+                            id=self.meaning_id).first()
         wrong_answer = self.get_wrong_answer(question_type)
         if question_type == "different_meaning":
-            right_answer = meaning
-            question = prefix.prefix+stem.stem
+            right_answer = meaning.append_hint()
+            question = {"question": prefix.prefix+stem.stem }
         else:
             right_answer = prefix.prefix+stem.stem
-            question = meaning
+            question = {
+                        "question": meaning.meaning,
+                        "hint": meaning.hint
+                       }
         answers = [
                     {"text": right_answer,
                      "correct": "right"},
