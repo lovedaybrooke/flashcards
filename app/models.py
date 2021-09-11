@@ -164,9 +164,9 @@ class LearningHistory(db.Model):
     @classmethod
     def get_question(cls, learner_id):
         question_type = random.choice([
-                                       "different_prefix"
-                                       # "different_stem",
-                                       # "different_meaning"
+                                       "different_prefix",
+                                       "different_stem",
+                                       "different_meaning"
                                        ])
 
         today = datetime.datetime.today().date()
