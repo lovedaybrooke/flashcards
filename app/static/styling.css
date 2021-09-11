@@ -39,37 +39,52 @@ div.answer-card {
 	align-items: center; /* align vertical */
 	margin:  30px 60px;
 	padding:  30px 20px;
-	background-color:  white;
 	text-align: center;
-	box-shadow: 8px 8px #D7E8F4;
 }
 
-.answerform div.slanted_button, div.slanted-button input {
-	display:  none;
+div.answer-card#wrong, div.answer-card#wrong:hover {
+	background-color:  #FFDAE3;
+	box-shadow: 8px 8px #FE95AF;
 }
 
-div.slanted-button.visible {
+div.answer-card#right, div.answer-card#right:hover {
+	background-color:  #DCEFED;
+	box-shadow: 8px 8px #A9D7D2;
+}
+
+div.answer-card.answer-concealed {
+	background-color:  white !important;
+	box-shadow: 8px 8px #D7E8F4 !important;
+}
+
+
+div.slanted-button {
 	margin:  30px auto ;
-	width: 170px;
+	width: 190px;
 	background-color:  white;
 	text-align: center;
 	border: 6px #D9DDE0 solid;
 	transform: skew(-20deg);
+	display: none;
 }
 
-div.slanted-button.visible:hover, div.answer-card:hover {
+div.slanted-button:hover, div.answer-card:hover {
 	background-color:  #F4F4F4;
 }
 
-div.slanted-button.visible input {
-	display:  block;
+div.slanted-button input, div.slanted-button p {
 	background:  none;
 	border:  none;
+	margin:  15px auto;
 	transform: skew(20deg);
 	font-family: 'Urbanist', sans-serif;
 	font-size: 0.7em;
-	margin:  15px auto ;
+}
 
+a {
+	text-decoration:  none;	
+	color:  black;
+	padding: 15px 20px;
 }
 
 
@@ -78,21 +93,27 @@ div#nameform input#name {
 	width: 250px;
 	height:  50px;
 	transform: translate(10px);
-
+	font-family: 'Urbanist', sans-serif;
+	font-size: 0.6em;
+	text-align:  center;
 }
 
 div#nameform input#name::placeholder {
 	font-family: 'Urbanist', sans-serif;
-	font-size: 1.2em;
 	text-align:  center;
 }
 
 
-#nameform div.slanted-button.visible {
+#nameform div.slanted-button {
 	width:  210px;
+	display: block;
 }
 
 form {
 	margin: 0;
+}
+
+div.answer-card.nohover:hover {
+	background-color:  #white;
 }
 

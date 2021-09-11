@@ -17,24 +17,24 @@
       <div class="grid-100">
           {% for answer in answers %}
             <div class="grid-50">
-              <div id="{{ answer.correct }}" class="answer-card">
+              <div id="{{ answer.correct }}" class="answer-card answer-concealed" onclick="respond()">
                 {{ answer.text }}
               </div>
             </div>
           {% endfor %}
 
-          {% for answer in answers %}
           <div class="grid-100">
               <div class="slanted-button">
-                <form action="/learn/{{ learner_id }}" method="post" name="answerform" id="{{answer.correct}}">
-                    {{ form.combination_id(value=combination) }}
-                    {{ form.question_type(value=question_type) }}
-                    {{ form.result(value=answer.correct) }}
-                    <input type="submit" value="Next question" class="button"/>
+                    <p><a href="/learn/{{ learner_id }}">Next question</a></p>
                 </form>
               </div>
             </div>
-          {% endfor %} 
+
+          <div style="display: none">
+            <span id="learner_id">{{ learner_id }}</span>
+            <span id="question-type">{{ question_type }}</span>
+            <span id="combination">{{ combination }}</span>
+          </div>
 
         {% endif %}
       </div>

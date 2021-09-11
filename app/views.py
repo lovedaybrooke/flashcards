@@ -1,3 +1,5 @@
+import ast
+
 from flask import Flask
 from flask import render_template, redirect, request
 
@@ -20,8 +22,10 @@ def home():
 def learn(learner_id):
     form = AnswerForm()
     if request.method == "POST":
-        LearningHistory.update(learner_id, form.combination_id.data,
-                               form.question_type.data, form.result.data)
+        LearningHistory.update(learner_id, 
+                               request.form["combination_id"],
+                               request.form["question_type"], 
+                               request.form["result"])
     next_question = LearningHistory.get_question(learner_id)
     return render_template('learn.html',
                            learner_id=learner_id,
