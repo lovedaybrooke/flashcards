@@ -134,6 +134,7 @@ class LearningHistory(db.Model):
     learner_id = db.Column(db.Integer, db.ForeignKey('learner.id'))
     direction = db.Column(db.Text)
     last_correct_date = db.Column(db.Date)
+    last_asked_date = db.Column(db.Date)
     ease = db.Column(db.Integer)
 
     @classmethod
@@ -167,18 +168,40 @@ class LearningHistory(db.Model):
                                        # "different_stem",
                                        # "different_meaning"
                                        ])
+
         today = datetime.datetime.today().date()
-        questions = cls.query.filter_by(learner_id=learner_id
-                            ).filter(cls.last_correct_date != today
-                            ).all()
-        if questions:
-            next_question = random.choice(questions)
-            combination = Combination.query.filter_by(
-                          id=next_question.combination_id).first()
-            return combination.get_learning_info(question_type)
+        new = cls.query.filter_by(learner_id=learner_id
+                      ).filter(cls.last_asked_date == None
+                      ).all()
+        never_right = cls.query.filter_by(learner_id=learner_id
+                              ).filter(cls.last_correct_date == None
+                              ).order_by(cls.ease.asc()
+                              ).all()
+        not_right_today = cls.query.filter_by(learner_id=learner_id
+                                    ).filter(cls.last_correct_date != today
+                                    ).order_by(cls.ease.asc()
+                                    ).all()
+        everything_hard = cls.query.filter_by(learner_id=learner_id
+                                    ).filter(cls.ease < 1
+                                    ).order_by(cls.ease.asc()
+                                    ).all()
+        everything_else = cls.query.filter_by(learner_id=learner_id
+                                    ).all()
+
+        if new:
+            next_question = random.choice(new)
+        elif never_right:
+            next_question = never_right[0]
+        elif not_right_today:
+            next_question = not_right_today[0]
+        elif everything_hard:
+            next_question = everything_hard[0]
         else:
-            combination = random.choice(Combination.query.all())
-            return combination.get_learning_info(question_type)
+            next_question = random.choice(everything_else)
+
+        combination = Combination.query.filter_by(
+                              id=next_question.combination_id).first()
+        return combination.get_learning_info(question_type)
 
     @classmethod
     def update(cls, learner_id, combination_id, question_type, correct):
@@ -186,6 +209,7 @@ class LearningHistory(db.Model):
                                       combination_id=int(combination_id),
                                       direction=cls.convert_question_type(question_type)
                                       ).first()
+        history.last_asked_date = datetime.datetime.today()
         if correct == "right":
             history.last_correct_date = datetime.datetime.today()
             history.ease += 1
