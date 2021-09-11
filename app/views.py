@@ -20,7 +20,6 @@ def home():
 
 @app.route('/learn/<learner_id>', methods=['GET', 'POST'])
 def learn(learner_id):
-    form = AnswerForm()
     if request.method == "POST":
         LearningHistory.update(learner_id, 
                                request.form["combination_id"],
@@ -32,5 +31,4 @@ def learn(learner_id):
                            combination=int(next_question["combination_id"]),
                            answers=next_question["answers"],
                            question=next_question["question"],
-                           question_type=next_question["question_type"],
-                           form=form)
+                           question_type=next_question["question_type"])
