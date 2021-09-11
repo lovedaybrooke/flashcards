@@ -1,14 +1,18 @@
 import os
+
+from dotenv import load_dotenv
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv()
 
 WTF_CSRF_ENABLED = True
-SECRET_KEY = "duckduckduckduck"
+SECRET_KEY = os.environ['SECRET_KEY']
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 
-SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/flashcards'
+SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
 
 def connect_db():
