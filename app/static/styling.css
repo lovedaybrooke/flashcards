@@ -20,6 +20,12 @@ div.question-card {
 	box-shadow: 10px 10px #B2B8DC;
 }
 
+@media only screen and (max-width: 600px) {
+	div.question-card {
+		width:  auto;
+	}
+}
+
 div.card-content {
 	display:  block;
 }
