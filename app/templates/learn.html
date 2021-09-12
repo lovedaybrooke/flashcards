@@ -18,7 +18,12 @@
           {% for answer in answers %}
             <div class="grid-50">
               <div id="{{ answer.correct }}" class="answer-card answer-concealed" onclick="respond()">
-                {{ answer.text }}
+                <div class="card-content">
+                  <p>{{ answer.text }}</p>
+                  {% if answer.hint %}
+                    <p class="hint">{{ answer.hint }}</p>
+                  {% endif %}
+                </div>
               </div>
             </div>
           {% endfor %}

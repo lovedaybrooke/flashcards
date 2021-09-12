@@ -35,8 +35,14 @@ div.question-card p {
 	font-size: 1.2em;
 }
 
-div.question-card p.hint {
+div.answer-card p {
+	margin: 0.2em;
+}
+
+div.question-card p.hint, div.answer-card p.hint {
 	font-size: 0.7em;
+	margin: 0.2em;
+	font-weight: 200;
 }
 
 div.answer-card {
@@ -46,6 +52,7 @@ div.answer-card {
 	margin:  30px 60px;
 	padding:  30px 20px;
 	text-align: center;
+	height:  80px;
 }
 
 div.answer-card#wrong, div.answer-card#wrong:hover {
