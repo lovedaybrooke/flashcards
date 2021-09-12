@@ -88,6 +88,19 @@ class Combination(db.Model):
                 db.session.add(new_c)
                 db.session.commit()
 
+    @classmethod
+    def get_meaning_from_id(cls, id):
+        return VerbMeaning.query.get(Combination.query.get(id
+                                     ).meaning_id).meaning
+
+    @classmethod
+    def get_meaning_from_verb(cls, verb):
+        verb_and_meaning = {VerbPrefix.query.get(c.prefix_id).prefix
+                            +VerbStem.query.get(c.stem_id).stem: 
+                            VerbMeaning.query.get(c.meaning_id).append_hint()
+                            for c in Combination.query.all()}
+        return verb_and_meaning[verb]
+
     def __str__(self):
         return "{0}-{1}: {2}".format(
                     VerbPrefix.query.get(self.prefix_id).prefix,
@@ -102,20 +115,22 @@ class Combination(db.Model):
                             id=self.meaning_id).first()
         wrong_answer = self.get_wrong_answer(question_type)
         if question_type == "different_meaning":
-            right_answer = meaning.append_hint()
+            right_answer = {"text": meaning.meaning, "hint": meaning.hint, 
+                           "correct": "right"}
             question = {"question": prefix.prefix+stem.stem }
+            answers = [right_answer, wrong_answer]
         else:
             right_answer = prefix.prefix+stem.stem
             question = {
                         "question": meaning.meaning,
                         "hint": meaning.hint
                        }
-        answers = [
-                    {"text": right_answer,
-                     "correct": "right"},
-                    {"text": wrong_answer,
-                     "correct": "wrong"}
-                  ]
+            answers = [
+                        {"text": right_answer,
+                         "correct": "right"},
+                        {"text": wrong_answer,
+                         "correct": "wrong"}
+                      ]
         random.shuffle(answers)
         return {"question_type": question_type,
                 "combination_id": self.id,
@@ -126,7 +141,9 @@ class Combination(db.Model):
         right_meaning_ids = [combi.meaning_id for combi in Combination.query
                              .filter_by(prefix_id=self.prefix_id)
                              .filter_by(stem_id=self.stem_id).all()]
-        wrong_meanings = [m.append_hint() for m in VerbMeaning.query.all()
+        wrong_meanings = [{"text": m.meaning, "hint": m.hint, 
+                           "correct": "wrong", "id": m.id}
+                          for m in VerbMeaning.query.all()
                           if m.id not in right_meaning_ids]
         return random.choice(wrong_meanings)
 
@@ -138,9 +155,10 @@ class Combination(db.Model):
                               .filter(Combination.stem_id != self.stem_id)
                               .filter(Combination.meaning_id != self.meaning_id)
                               .all()]
-        wrong_stems = [s.stem for s in VerbStem.query.all()
+        wrong_answers = [{"wrong_answer": right_prefix+s.stem, "stem_id": s.id}
+                       for s in VerbStem.query.all()
                        if s.id in alternate_stem_ids]
-        return right_prefix+random.choice(wrong_stems)
+        return random.choice(wrong_answers)
 
     def get_wrong_prefix(self):
         right_stem = VerbStem.query.filter_by(
@@ -150,15 +168,17 @@ class Combination(db.Model):
                                 .filter(Combination.prefix_id != self.prefix_id)
                                 .filter(Combination.meaning_id != self.meaning_id)
                                 .all()]
-        wrong_prefixes = [p.prefix for p in VerbPrefix.query.all()
+        wrong_answers = [{"wrong_answer": p.prefix+right_stem, 
+                          "prefix_id": p.id}
+                          for p in VerbPrefix.query.all()
                           if p.id in alternate_prefix_ids]
-        return random.choice(wrong_prefixes)+right_stem
+        return random.choice(wrong_answers)
 
     def get_wrong_answer(self, question_type):
         if question_type == "different_prefix":
-            return self.get_wrong_prefix()
+            return self.get_wrong_prefix()["wrong_answer"]
         elif question_type == "different_stem":
-            return self.get_wrong_stem()
+            return self.get_wrong_stem()["wrong_answer"]
         elif question_type == "different_meaning":
             return self.get_wrong_meaning()
 
