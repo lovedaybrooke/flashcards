@@ -11,16 +11,51 @@ class VerbStem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stem = db.Column(db.Text)
 
+    @classmethod
+    def find_or_create(cls, search_stem):
+        exists = cls.query.filter_by(stem=search_stem).all()
+        if exists:
+            return exists[0]
+        else:
+            new = cls(stem=search_stem)
+            db.session.add(new)
+            db.session.commit()
+            return new
+
 
 class VerbPrefix(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prefix = db.Column(db.Text)
+
+    @classmethod
+    def find_or_create(cls, search_prefix):
+        exists = cls.query.filter_by(prefix=search_prefix).all()
+        if exists:
+            return exists[0]
+        else:
+            new = cls(prefix=search_prefix)
+            db.session.add(new)
+            db.session.commit()
+            return new
 
 
 class VerbMeaning(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     meaning = db.Column(db.Text)
     hint = db.Column(db.Text)
+
+    @classmethod
+    def find_or_create(cls, search_meaning, search_hint):
+        exists = cls.query.filter_by(meaning=search_meaning
+                             ).filter_by(hint=search_hint
+                             ).all()
+        if exists:
+            return exists[0]
+        else:
+            new = cls(meaning=search_meaning, hint=search_hint)
+            db.session.add(new)
+            db.session.commit()
+            return new
 
     def append_hint(self):
         if self.hint:
@@ -34,6 +69,24 @@ class Combination(db.Model):
     prefix_id = db.Column(db.Integer, db.ForeignKey('verb_prefix.id'))
     stem_id = db.Column(db.Integer, db.ForeignKey('verb_stem.id'))
     meaning_id = db.Column(db.Integer, db.ForeignKey('verb_meaning.id'))
+
+    @classmethod
+    def import_combinations(cls, combo_list):
+        for item in combo_list:
+            p = VerbPrefix.find_or_create(item["prefix"])
+            s = VerbStem.find_or_create(item["stem"])
+            m = VerbMeaning.find_or_create(item["meaning"], item["hint"])
+            existing_c = cls.query.filter_by(stem_id=s.id
+                                 ).filter_by(prefix_id=p.id
+                                 ).filter_by(meaning_id=m.id
+                                 ).all()
+            if not existing_c:
+                new_c = cls(meaning_id=m.id,
+                            stem_id=s.id,
+                            prefix_id=p.id
+                            )
+                db.session.add(new_c)
+                db.session.commit()
 
     def get_learning_info(self, question_type):
         prefix = VerbPrefix.query.filter_by(id=self.prefix_id).first()

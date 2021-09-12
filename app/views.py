@@ -6,6 +6,7 @@ from flask import render_template, redirect, request
 from app import app, db
 from app.forms import *
 from app.models import *
+from app.combinations import combos
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -32,3 +33,8 @@ def learn(learner_id):
                            answers=next_question["answers"],
                            question=next_question["question"],
                            question_type=next_question["question_type"])
+
+@app.route('/import', methods=['GET'])
+def import_combos():
+    Combination.import_combinations(combos)
+    return redirect('/')
