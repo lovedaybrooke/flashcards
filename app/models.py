@@ -88,6 +88,13 @@ class Combination(db.Model):
                 db.session.add(new_c)
                 db.session.commit()
 
+    def __str__(self):
+        return "{0}-{1}: {2}".format(
+                    VerbPrefix.query.get(self.prefix_id).prefix,
+                    VerbStem.query.get(self.stem_id).stem,
+                    VerbMeaning.query.get(self.meaning_id).append_hint()
+                )
+
     def get_learning_info(self, question_type):
         prefix = VerbPrefix.query.filter_by(id=self.prefix_id).first()
         stem = VerbStem.query.filter_by(id=self.stem_id).first()
